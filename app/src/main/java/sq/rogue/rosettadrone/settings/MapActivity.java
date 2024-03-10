@@ -52,9 +52,8 @@ import dji.sdk.mission.waypoint.WaypointMissionOperatorListener;
 import dji.sdk.products.Aircraft;
 import dji.sdk.sdkmanager.DJISDKManager;
 import dji.sdk.useraccount.UserAccountManager;
-import sq.rogue.rosettadrone.DJISimulatorApplication;
-import sq.rogue.rosettadrone.R;
 import sq.rogue.rosettadrone.RDApplication;
+import wiley.sq.rogue.rosettadrone.R;
 
 //public class HelpActivity extends AppCompatActivity implements PreferenceFragmentCompat.OnPreferenceStartScreenCallback, OnMapReadyCallback{
 public class MapActivity extends FragmentActivity implements View.OnClickListener, GoogleMap.OnMapClickListener, OnMapReadyCallback {

@@ -113,7 +113,7 @@
 
         <meta-data
             android:name="com.dji.sdk.API_KEY"
-            android:value="@string/dji_key" />
+            android:value="343e2c8e97e901e356c2cbe2" />
         <!-- DJI SDK -->
 
         <meta-data

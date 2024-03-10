@@ -4,33 +4,15 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.RadioGroup;
-
-import androidx.appcompat.widget.AppCompatRadioButton;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import dji.common.mission.waypointv2.Action.ActionTypes;
 import dji.common.mission.waypointv2.Action.WaypointTrigger;
 import dji.common.mission.waypointv2.Action.WaypointV2AssociateTriggerParam;
-import sq.rogue.rosettadrone.R;
 import sq.rogue.rosettadrone.settings.Tools;
+import wiley.sq.rogue.rosettadrone.databinding.FragmentAssociateTriggerBinding;
 
 public class AssociateTriggerFragment extends BaseTriggerFragment implements ITriggerCallback {
 
-
-    @BindView(R.id.et_wait_time)
-    EditText etWaitTime;
-    Unbinder unbinder;
-    @BindView(R.id.radio_group_type)
-    RadioGroup radioGroupType;
-    @BindView(R.id.rb_sync)
-    AppCompatRadioButton rbSync;
-    @BindView(R.id.rb_after)
-    AppCompatRadioButton rbAfter;
-    @BindView(R.id.et_action_id)
-    EditText etActionId;
+    private FragmentAssociateTriggerBinding binding;
 
     public AssociateTriggerFragment() {
     }
@@ -42,23 +24,22 @@ public class AssociateTriggerFragment extends BaseTriggerFragment implements ITr
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_associate_trigger, container, false);
-        unbinder = ButterKnife.bind(this, root);
-        return root;
+        binding = FragmentAssociateTriggerBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        unbinder.unbind();
+        binding = null;
     }
 
     @Override
     public WaypointTrigger getTrigger() {
-        float waitTime = Tools.getFloat(etWaitTime.getText().toString(), 1);
-        ActionTypes.AssociatedTimingType type = rbSync.isChecked()
+        float waitTime = Tools.getFloat(binding.etWaitTime.getText().toString(), 1);
+        ActionTypes.AssociatedTimingType type = binding.rbSync.isChecked()
                 ? ActionTypes.AssociatedTimingType.SIMULTANEOUSLY : ActionTypes.AssociatedTimingType.AFTER_FINISHED;
-        int actionId = Tools.getInt(etActionId.getText().toString(), 1);
+        int actionId = Tools.getInt(binding.etActionId.getText().toString(), 1);
 
         if (actionId > size) {
             Tools.showToast(getActivity(), "actionId can`t bigger existed action size, size=" + size);

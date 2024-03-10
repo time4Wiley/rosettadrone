@@ -4,19 +4,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.RadioGroup;
 
-import androidx.appcompat.widget.AppCompatRadioButton;
 import androidx.fragment.app.Fragment;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
+
 import dji.common.mission.waypointv2.Action.ActionTypes;
 import dji.common.mission.waypointv2.Action.WaypointIntervalTriggerParam;
 import dji.common.mission.waypointv2.Action.WaypointTrigger;
-import sq.rogue.rosettadrone.R;
 import sq.rogue.rosettadrone.settings.Tools;
+import wiley.sq.rogue.rosettadrone.databinding.FragmentSimpleIntervalTriggerBinding;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,19 +20,7 @@ import sq.rogue.rosettadrone.settings.Tools;
  */
 public class SimpleIntervalTriggerFragment extends BaseTriggerFragment implements ITriggerCallback {
 
-
-    @BindView(R.id.et_start_index)
-    EditText etStartIndex;
-    @BindView(R.id.radio_group_type)
-    RadioGroup radioGroupType;
-    @BindView(R.id.et_value)
-    EditText etValue;
-    @BindView(R.id.rb_distance)
-    AppCompatRadioButton rbDistance;
-    @BindView(R.id.rb_time)
-    AppCompatRadioButton rbTime;
-
-    Unbinder unbinder;
+    private FragmentSimpleIntervalTriggerBinding binding;
 
     public static SimpleIntervalTriggerFragment newInstance() {
         SimpleIntervalTriggerFragment fragment = new SimpleIntervalTriggerFragment();
@@ -46,22 +29,21 @@ public class SimpleIntervalTriggerFragment extends BaseTriggerFragment implement
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_simple_interval_trigger, container, false);
-        unbinder = ButterKnife.bind(this, root);
-        return root;
+        binding = FragmentSimpleIntervalTriggerBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @Override
     public WaypointTrigger getTrigger() {
-        float value = Tools.getFloat(etValue.getText().toString(), 1.1f);
-        int start = Tools.getInt(etStartIndex.getText().toString(), 1);
+        float value = Tools.getFloat(binding.etValue.getText().toString(), 1.1f);
+        int start = Tools.getInt(binding.etStartIndex.getText().toString(), 1);
 
         if (start > size) {
             Tools.showToast(getActivity(), "start can`t bigger waypoint mission size, size=" + size);
             return null;
         }
 
-        ActionTypes.ActionIntervalType type = rbDistance.isChecked()
+        ActionTypes.ActionIntervalType type = binding.rbDistance.isChecked()
                 ? ActionTypes.ActionIntervalType.DISTANCE : ActionTypes.ActionIntervalType.TIME;
         WaypointIntervalTriggerParam param = new WaypointIntervalTriggerParam.Builder()
                 .setStartIndex(start)
@@ -77,6 +59,6 @@ public class SimpleIntervalTriggerFragment extends BaseTriggerFragment implement
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        unbinder.unbind();
+        binding = null;
     }
 }

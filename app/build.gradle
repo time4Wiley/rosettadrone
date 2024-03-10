@@ -5,6 +5,11 @@ android {
         release {
         }
     }
+
+    viewBinding {
+        enabled = true
+    }
+
     compileSdkVersion 33
     defaultConfig {
         applicationId "sq.rogue.rosettadrone"

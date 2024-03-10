@@ -103,12 +103,13 @@ android {
 
     // We need to be restrict as we get error on newer versions...
     //   buildToolsVersion '30.0.2'
-    ndkVersion '22.0.7026061'
+    ndkVersion '23.1.7779620'
    android {
         lintOptions {
             abortOnError false //Required, due to lack of support of gradle 7
         }
     }
+    buildToolsVersion '34.0.0'
 }
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')

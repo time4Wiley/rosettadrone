@@ -13,7 +13,8 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import sq.rogue.rosettadrone.R;
+
+import wiley.sq.rogue.rosettadrone.databinding.FragmentLogBinding;
 
 public class LogFragment extends Fragment {
 
@@ -31,6 +32,9 @@ public class LogFragment extends Fragment {
 //    };
     private boolean mViewAtBottom = true;
     private int mMaxCharacters = DEFAULT_MAX_CHARACTERS;
+
+    private FragmentLogBinding binding; // Variable for the binding class
+
     private int LONG_PRESS_TIMEOUT = 3000;
 
     @Override
@@ -46,52 +50,37 @@ public class LogFragment extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         this.setRetainInstance(true);
 
-        View view = inflater.inflate(R.layout.fragment_log, container, false);
-        mTextViewTraffic = view.findViewById(R.id.log);
+        // Inflate the layout for this fragment using View Binding
+        binding = FragmentLogBinding.inflate(inflater, container, false);
+        View view = binding.getRoot();
 
-        mScrollView = (ScrollView) view.findViewById(R.id.textAreaScrollerTraffic);
-
-        mTextViewTraffic.addTextChangedListener(new TextWatcher() {
-
+        // Now use binding to access views
+        binding.log.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable arg0) {
                 if (mViewAtBottom) {
-                    mScrollView.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            mScrollView.fullScroll(View.FOCUS_DOWN);
-                        }
-                    });
+                    binding.textAreaScrollerTraffic.post(() -> binding.textAreaScrollerTraffic.fullScroll(View.FOCUS_DOWN));
                 }
             }
 
             @Override
-            public void beforeTextChanged(CharSequence arg0, int arg1,
-                                          int arg2, int arg3) {
-                //override stub
+            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+                // override stub
             }
 
             @Override
-            public void onTextChanged(CharSequence arg0, int arg1, int arg2,
-                                      int arg3) {
-                //override stub
-            }
-        });
-        mScrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
-            @Override
-            public void onScrollChanged() {
-                if (mScrollView != null) {
-                    if (mScrollView.getChildAt(0).getBottom() <= (mScrollView.getHeight() + mScrollView.getScrollY()) + 500) {
-                        mViewAtBottom = true;
-
-                    } else {
-                        mViewAtBottom = false;
-                    }
-                }
+            public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+                // override stub
             }
         });
 
-//        mTextViewTraffic.setHorizontallyScrolling(true);
+        binding.textAreaScrollerTraffic.getViewTreeObserver().addOnScrollChangedListener(() -> {
+            if (binding.textAreaScrollerTraffic.getChildAt(0).getBottom() <= (binding.textAreaScrollerTraffic.getHeight() + binding.textAreaScrollerTraffic.getScrollY()) + 500) {
+                mViewAtBottom = true;
+            } else {
+                mViewAtBottom = false;
+            }
+        });
 
         return view;
     }

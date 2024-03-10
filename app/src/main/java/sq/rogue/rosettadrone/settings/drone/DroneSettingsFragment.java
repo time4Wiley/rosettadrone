@@ -12,7 +12,7 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import sq.rogue.rosettadrone.MainActivity;
 import sq.rogue.rosettadrone.NotificationHandler;
-import sq.rogue.rosettadrone.R;
+import wiley.sq.rogue.rosettadrone.R;
 
 import static sq.rogue.rosettadrone.util.TYPE_DRONE_ID;
 import static sq.rogue.rosettadrone.util.TYPE_DRONE_RTL_ALTITUDE;

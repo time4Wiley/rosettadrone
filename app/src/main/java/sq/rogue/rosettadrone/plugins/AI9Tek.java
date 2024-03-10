@@ -44,10 +44,8 @@ import sq.rogue.rosettadrone.DroneModel;
 import sq.rogue.rosettadrone.MainActivity;
 import sq.rogue.rosettadrone.NotificationHandler;
 import sq.rogue.rosettadrone.Plugin;
-import sq.rogue.rosettadrone.PluginManager;
-import sq.rogue.rosettadrone.R;
-import sq.rogue.rosettadrone.RDApplication;
 import sq.rogue.rosettadrone.settings.MailReport;
+import wiley.sq.rogue.rosettadrone.R;
 
 public class AI9Tek extends Plugin {
     private final String TAG = DroneModel.class.getSimpleName();

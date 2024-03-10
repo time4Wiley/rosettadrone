@@ -8,8 +8,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceScreen;
-import sq.rogue.rosettadrone.R;
 import sq.rogue.rosettadrone.settings.drone.DroneSettingsFragment;
+import wiley.sq.rogue.rosettadrone.R;
 
 public class SettingsActivity extends AppCompatActivity implements PreferenceFragmentCompat.OnPreferenceStartScreenCallback {
     private static final String TAG = SettingsActivity.class.getSimpleName();

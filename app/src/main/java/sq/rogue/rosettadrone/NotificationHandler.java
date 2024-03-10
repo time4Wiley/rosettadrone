@@ -23,6 +23,8 @@ import static sq.rogue.rosettadrone.util.TYPE_WAYPOINT_MIN_ALTITUDE;
 import static sq.rogue.rosettadrone.util.TYPE_WAYPOINT_MIN_SPEED;
 import static sq.rogue.rosettadrone.util.TYPE_WAYPOINT_TOTAL_DISTANCE;
 
+import wiley.sq.rogue.rosettadrone.R;
+
 public class NotificationHandler {
     public static void notifySnackbar(View view, int resID, int duration) {
         Snackbar snackbar = Snackbar.make(view, resID, duration);

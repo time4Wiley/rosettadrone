@@ -110,6 +110,7 @@ import sq.rogue.rosettadrone.settings.Waypoint1Activity;
 import sq.rogue.rosettadrone.settings.Waypoint2Activity;
 import sq.rogue.rosettadrone.video.NativeHelper;
 import sq.rogue.rosettadrone.video.VideoService;
+import wiley.sq.rogue.rosettadrone.R;
 
 import static com.google.android.material.snackbar.Snackbar.LENGTH_LONG;
 import static sq.rogue.rosettadrone.util.safeSleep;

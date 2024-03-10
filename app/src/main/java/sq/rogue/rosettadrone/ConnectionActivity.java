@@ -37,6 +37,7 @@ import dji.keysdk.callback.KeyListener;
 import dji.sdk.base.BaseProduct;
 import dji.sdk.products.Aircraft;
 import dji.sdk.sdkmanager.DJISDKManager;
+import wiley.sq.rogue.rosettadrone.R;
 
 public class ConnectionActivity extends Activity implements View.OnClickListener {
 

@@ -11,7 +11,7 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceGroup;
 import sq.rogue.rosettadrone.MainActivity;
 import sq.rogue.rosettadrone.NotificationHandler;
-import sq.rogue.rosettadrone.R;
+import wiley.sq.rogue.rosettadrone.R;
 
 import static sq.rogue.rosettadrone.util.TYPE_APP_NAME;
 import static sq.rogue.rosettadrone.util.TYPE_GCS_IP;

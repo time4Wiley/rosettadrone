@@ -12,16 +12,14 @@ import android.widget.RadioGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import dji.common.mission.waypointv2.Action.ActionTypes;
 import dji.common.mission.waypointv2.Action.WaypointActuator;
 import dji.common.mission.waypointv2.Action.WaypointCameraActuatorParam;
 import dji.common.mission.waypointv2.Action.WaypointCameraFocusParam;
 import dji.common.mission.waypointv2.Action.WaypointCameraZoomParam;
-import sq.rogue.rosettadrone.R;
 import sq.rogue.rosettadrone.settings.Tools;
+import wiley.sq.rogue.rosettadrone.R;
+import wiley.sq.rogue.rosettadrone.databinding.FragmentCameraActuatorBinding;
 
 ;
 
@@ -31,28 +29,7 @@ import sq.rogue.rosettadrone.settings.Tools;
  * create an instance of this fragment.
  */
 public class CameraActuatorFragment extends Fragment implements IActuatorCallback {
-
-    @BindView(R.id.rb_shoot_single_photo)
-    RadioButton rbShootSinglePhoto;
-    @BindView(R.id.rb_start_record_video)
-    RadioButton rbStartRecordVideo;
-    @BindView(R.id.rb_stop_record_video)
-    RadioButton rbStopRecordVideo;
-    @BindView(R.id.rb_focus)
-    RadioButton rbFocus;
-    @BindView(R.id.rb_zoom)
-    RadioButton rbZoom;
-    @BindView(R.id.radio_camera_type)
-    RadioGroup radioCameraType;
-    @BindView(R.id.et_zoom)
-    EditText etZoom;
-
-    @BindView(R.id.et_focus_target_x)
-    EditText etFocusTargetX;
-    @BindView(R.id.et_focus_target_y)
-    EditText etFocusTargetY;
-
-    Unbinder unbinder;
+    private FragmentCameraActuatorBinding binding;
 
     public static CameraActuatorFragment newInstance() {
         CameraActuatorFragment fragment = new CameraActuatorFragment();
@@ -61,21 +38,20 @@ public class CameraActuatorFragment extends Fragment implements IActuatorCallbac
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_camera_actuator, container, false);
-        unbinder = ButterKnife.bind(this, root);
-        return root;
+        binding = FragmentCameraActuatorBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        unbinder.unbind();
+        binding = null;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        radioCameraType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        binding.radioCameraType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
@@ -115,10 +91,10 @@ public class CameraActuatorFragment extends Fragment implements IActuatorCallbac
 
     @Override
     public WaypointActuator getActuator() {
-        int focalLength = Tools.getInt(etZoom.getText().toString(), 10);
+        int focalLength = Tools.getInt(binding.etZoom.getText().toString(), 10);
         ActionTypes.CameraOperationType type = getType();
         WaypointCameraFocusParam focusParam = new WaypointCameraFocusParam.Builder()
-                .focusTarget(new PointF(Tools.getFloat(etFocusTargetX.getText().toString(), 0.5f), Tools.getFloat(etFocusTargetY.getText().toString(), 0.5f)))
+                .focusTarget(new PointF(Tools.getFloat(binding.etFocusTargetX.getText().toString(), 0.5f), Tools.getFloat(binding.etFocusTargetY.getText().toString(), 0.5f)))
                 .build();
         WaypointCameraZoomParam zoomParam = new WaypointCameraZoomParam.Builder()
                 .setFocalLength(focalLength)
@@ -135,7 +111,7 @@ public class CameraActuatorFragment extends Fragment implements IActuatorCallbac
     }
 
     public ActionTypes.CameraOperationType getType() {
-        switch (radioCameraType.getCheckedRadioButtonId()) {
+        switch (binding.radioCameraType.getCheckedRadioButtonId()) {
             case R.id.rb_shoot_single_photo:
                 return ActionTypes.CameraOperationType.SHOOT_SINGLE_PHOTO;
             case R.id.rb_start_record_video:

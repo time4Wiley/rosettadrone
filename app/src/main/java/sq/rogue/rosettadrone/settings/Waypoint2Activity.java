@@ -58,9 +58,8 @@ import dji.sdk.mission.waypoint.WaypointV2MissionOperatorListener;
 import dji.sdk.products.Aircraft;
 import dji.sdk.sdkmanager.DJISDKManager;
 import dji.sdk.useraccount.UserAccountManager;
-import sq.rogue.rosettadrone.DJISimulatorApplication;
-import sq.rogue.rosettadrone.R;
 import sq.rogue.rosettadrone.RDApplication;
+import wiley.sq.rogue.rosettadrone.R;
 
 public class Waypoint2Activity extends FragmentActivity implements View.OnClickListener, GoogleMap.OnMapClickListener, OnMapReadyCallback {
 

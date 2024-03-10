@@ -4,25 +4,18 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.fragment.app.Fragment;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import dji.common.gimbal.Rotation;
 import dji.common.gimbal.RotationMode;
 import dji.common.mission.waypointv2.Action.ActionTypes;
 import dji.common.mission.waypointv2.Action.WaypointActuator;
 import dji.common.mission.waypointv2.Action.WaypointGimbalActuatorParam;
-import sq.rogue.rosettadrone.R;
 import sq.rogue.rosettadrone.fragment.trigger.ITriggerCallback;
 import sq.rogue.rosettadrone.settings.Tools;
+import wiley.sq.rogue.rosettadrone.R;
+import wiley.sq.rogue.rosettadrone.databinding.FragmentGimbalActuatorBinding;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,33 +25,7 @@ import sq.rogue.rosettadrone.settings.Tools;
 public class GimbalActuatorFragment extends Fragment implements IActuatorCallback {
     private ITriggerCallback callback;
 
-    Unbinder unbinder;
-    @BindView(R.id.tv_title)
-    TextView tvTitle;
-    @BindView(R.id.rb_rotate_gimbal)
-    RadioButton rbRotateGimbal;
-    @BindView(R.id.rb_aircraft_control_gimbal)
-    RadioButton rbAircraftControlGimbal;
-    @BindView(R.id.radio_gimbal_type)
-    RadioGroup radioGimbalType;
-    @BindView(R.id.et_gimbal_roll)
-    EditText etGimbalRoll;
-    @BindView(R.id.et_gimbal_pitch)
-    EditText etGimbalPitch;
-    @BindView(R.id.et_gimbal_yaw)
-    EditText etGimbalYaw;
-    @BindView(R.id.et_duration_time)
-    EditText etDurationTime;
-    @BindView(R.id.box_absulote)
-    AppCompatCheckBox boxAbsulote;
-    @BindView(R.id.box_rollIgnore)
-    AppCompatCheckBox boxRollIgnore;
-    @BindView(R.id.box_pitch_ignore)
-    AppCompatCheckBox boxPitchIgnore;
-    @BindView(R.id.box_yaw_igore)
-    AppCompatCheckBox boxYawIgore;
-    @BindView(R.id.box_abs_yaw_ref)
-    AppCompatCheckBox boxAbsYawRef;
+    private FragmentGimbalActuatorBinding binding;
 
     public static GimbalActuatorFragment newInstance(ITriggerCallback callback) {
         GimbalActuatorFragment fragment = new GimbalActuatorFragment(callback);
@@ -71,16 +38,16 @@ public class GimbalActuatorFragment extends Fragment implements IActuatorCallbac
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_gimbal_actuator, container, false);
-        unbinder = ButterKnife.bind(this, root);
+        binding = FragmentGimbalActuatorBinding.inflate(inflater, container, false);
         flush();
-        return root;
+
+        return binding.getRoot();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        unbinder.unbind();
+        binding = null;
     }
 
     public void flush() {
@@ -89,38 +56,38 @@ public class GimbalActuatorFragment extends Fragment implements IActuatorCallbac
         }
         if (callback.getTrigger() == null) {
             Toast.makeText(getContext(), "Please select trigger.", Toast.LENGTH_SHORT).show();
-            rbAircraftControlGimbal.setVisibility(View.GONE);
-            rbRotateGimbal.setVisibility(View.VISIBLE);
+            binding.rbAircraftControlGimbal.setVisibility(View.GONE);
+            binding.rbRotateGimbal.setVisibility(View.VISIBLE);
             return;
         }
         if (callback.getTrigger().getTriggerType() == ActionTypes.ActionTriggerType.TRAJECTORY) {
-            rbAircraftControlGimbal.setVisibility(View.VISIBLE);
-            rbRotateGimbal.setVisibility(View.GONE);
+            binding.rbAircraftControlGimbal.setVisibility(View.VISIBLE);
+            binding.rbRotateGimbal.setVisibility(View.GONE);
         } else {
-            rbAircraftControlGimbal.setVisibility(View.GONE);
-            rbRotateGimbal.setVisibility(View.VISIBLE);
+            binding.rbAircraftControlGimbal.setVisibility(View.GONE);
+            binding.rbRotateGimbal.setVisibility(View.VISIBLE);
         }
     }
 
     @Override
     public WaypointActuator getActuator() {
-        float roll = Tools.getFloat(etGimbalRoll.getText().toString(), 0.1f);
-        float pitch = Tools.getFloat(etGimbalPitch.getText().toString(), 0.2f);
-        float yaw = Tools.getFloat(etGimbalYaw.getText().toString(), 0.3f);
-        int duration = Tools.getInt(etDurationTime.getText().toString(), 10);
+        float roll = Tools.getFloat(binding.etGimbalRoll.getText().toString(), 0.1f);
+        float pitch = Tools.getFloat(binding.etGimbalPitch.getText().toString(), 0.2f);
+        float yaw = Tools.getFloat(binding.etGimbalYaw.getText().toString(), 0.3f);
+        int duration = Tools.getInt(binding.etDurationTime.getText().toString(), 10);
         ActionTypes.GimbalOperationType type = getType();
 
         Rotation.Builder rotationBuilder = new Rotation.Builder();
-        if (!boxRollIgnore.isChecked()) {
+        if (!binding.boxRollIgnore.isChecked()) {
             rotationBuilder.roll(roll);
         }
-        if (!boxPitchIgnore.isChecked()) {
+        if (!binding.boxPitchIgnore.isChecked()) {
             rotationBuilder.pitch(pitch);
         }
-        if (!boxYawIgore.isChecked()) {
+        if (!binding.boxYawIgore.isChecked()) {
             rotationBuilder.yaw(yaw);
         }
-        if (boxAbsulote.isChecked()) {
+        if (binding.boxAbsulote.isChecked()) {
             rotationBuilder.mode(RotationMode.ABSOLUTE_ANGLE);
         } else {
             rotationBuilder.mode(RotationMode.RELATIVE_ANGLE);
@@ -137,7 +104,7 @@ public class GimbalActuatorFragment extends Fragment implements IActuatorCallbac
     }
 
     public ActionTypes.GimbalOperationType getType() {
-        switch (radioGimbalType.getCheckedRadioButtonId()) {
+        switch (binding.radioGimbalType.getCheckedRadioButtonId()) {
             case R.id.rb_rotate_gimbal:
                 return ActionTypes.GimbalOperationType.ROTATE_GIMBAL;
             case R.id.rb_aircraft_control_gimbal:

@@ -10,7 +10,7 @@ import java.util.List;
 
 import androidx.recyclerview.widget.RecyclerView;
 import dji.common.mission.waypointv2.Action.WaypointV2Action;
-import sq.rogue.rosettadrone.R;
+import wiley.sq.rogue.rosettadrone.R;
 
 public class WaypointActionAdapter extends RecyclerView.Adapter<WaypointActionAdapter.ViewHolder> {
     private List<WaypointV2Action> data;

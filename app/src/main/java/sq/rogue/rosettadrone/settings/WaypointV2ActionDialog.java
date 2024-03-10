@@ -21,20 +21,16 @@ import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.DialogFragment;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import butterknife.Unbinder;
 import dji.common.mission.waypointv2.Action.ActionTypes;
 import dji.common.mission.waypointv2.Action.WaypointActuator;
 import dji.common.mission.waypointv2.Action.WaypointTrigger;
 import dji.common.mission.waypointv2.Action.WaypointV2Action;
-import sq.rogue.rosettadrone.R;
 import sq.rogue.rosettadrone.fragment.actuator.AircraftActuatorFragment;
 import sq.rogue.rosettadrone.fragment.actuator.CameraActuatorFragment;
 import sq.rogue.rosettadrone.fragment.actuator.GimbalActuatorFragment;
@@ -45,33 +41,12 @@ import sq.rogue.rosettadrone.fragment.trigger.ITriggerCallback;
 import sq.rogue.rosettadrone.fragment.trigger.ReachPointTriggerFragment;
 import sq.rogue.rosettadrone.fragment.trigger.SimpleIntervalTriggerFragment;
 import sq.rogue.rosettadrone.fragment.trigger.TrajectoryTriggerFragment;
+import wiley.sq.rogue.rosettadrone.R;
+import wiley.sq.rogue.rosettadrone.databinding.DialogWaypointV2Binding;
 
 public class WaypointV2ActionDialog extends DialogFragment implements ITriggerCallback {
-    @BindView(R.id.tv_title)
-    TextView tvTitle;
-    @BindView(R.id.view_division)
-    View viewDivision;
-    @BindView(R.id.rv_added_action)
-    RecyclerView rvAddedAction;
-    @BindView(R.id.nsv_action_detail)
-    NestedScrollView nsvActionDetail;
-    @BindView(R.id.tv_ok)
-    TextView tvOk;
-    Unbinder unbinder;
-    @BindView(R.id.tv_trigger_title)
-    TextView tvTriggerTitle;
-    @BindView(R.id.cl_trigger)
-    ConstraintLayout clTrigger;
-    @BindView(R.id.spinner_trigger_type)
-    AppCompatSpinner spinnerTriggerType;
-    @BindView(R.id.fl_trigger_info)
-    FrameLayout flTriggerInfo;
-    @BindView(R.id.tv_actuator_title)
-    TextView tvActuatorTitle;
-    @BindView(R.id.spinner_actuator_type)
-    AppCompatSpinner spinnerActuatorType;
-    @BindView(R.id.fl_actuator_info)
-    FrameLayout flActuatorInfo;
+
+    private DialogWaypointV2Binding binding;
 
     private WaypointActionAdapter actionAdapter;
 
@@ -109,11 +84,41 @@ public class WaypointV2ActionDialog extends DialogFragment implements ITriggerCa
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.dialog_waypoint_v2, container, false);
-        unbinder = ButterKnife.bind(this, root);
+
+        binding = DialogWaypointV2Binding.inflate(inflater, container, false);
+
         initData();
         initView();
-        return root;
+        setupClickListeners(); // Setup click listeners for your interactive views
+
+        return binding.getRoot();
+    }
+
+    private void setupClickListeners() {
+        binding.tvOk.setOnClickListener(v -> {
+            if (actionCallback != null) {
+                actionCallback.getActions(actionAdapter.getData());
+            }
+            dismiss();
+            position = 0;
+        });
+
+        binding.tvAdd.setOnClickListener(v -> {
+            WaypointTrigger trigger = getWaypointTrigger();
+            WaypointActuator actuator = getWaypointActuator();
+            boolean result = verifyAction(trigger, actuator);
+            if (!result) {
+                return;
+            }
+            WaypointV2Action action = new WaypointV2Action.Builder()
+                    .setTrigger(trigger)
+                    .setActuator(actuator)
+                    .setActionID(++position)
+                    .build();
+            actionAdapter.addItem(action);
+            updateSize();
+        });
+
     }
 
     private void initData() {
@@ -136,16 +141,17 @@ public class WaypointV2ActionDialog extends DialogFragment implements ITriggerCa
     }
 
     private void initView() {
-        rvAddedAction.setLayoutManager(new LinearLayoutManager(getContext()));
-        rvAddedAction.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayout.HORIZONTAL));
+
+        binding.rvAddedAction.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.rvAddedAction.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayout.HORIZONTAL));
 
         actionAdapter = new WaypointActionAdapter(getContext(), new ArrayList<>());
-        rvAddedAction.setAdapter(actionAdapter);
+        binding.rvAddedAction.setAdapter(actionAdapter);
 
         ArrayAdapter<String> triggerAdapter = new ArrayAdapter(getActivity(),
                 android.R.layout.simple_spinner_dropdown_item, triggerType);
-        spinnerTriggerType.setAdapter(triggerAdapter);
-        spinnerTriggerType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        binding.spinnerTriggerType.setAdapter(triggerAdapter);
+        binding.spinnerTriggerType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 0) {
@@ -200,8 +206,8 @@ public class WaypointV2ActionDialog extends DialogFragment implements ITriggerCa
         });
         actuatorAdapter = new ArrayAdapter(getActivity(),
                 android.R.layout.simple_spinner_dropdown_item, actuatorType);
-        spinnerActuatorType.setAdapter(actuatorAdapter);
-        spinnerActuatorType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        binding.spinnerActuatorType.setAdapter(actuatorAdapter);
+        binding.spinnerActuatorType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 0) {
@@ -338,35 +344,7 @@ public class WaypointV2ActionDialog extends DialogFragment implements ITriggerCa
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        unbinder.unbind();
-    }
-
-    @OnClick({R.id.tv_ok, R.id.tv_add})
-    public void onViewClick(View v) {
-        switch (v.getId()) {
-            case R.id.tv_ok:
-                if (actionCallback != null) {
-                    actionCallback.getActions(actionAdapter.getData());
-                }
-                dismiss();
-                position = 0;
-                break;
-            case R.id.tv_add:
-                WaypointTrigger trigger = getWaypointTrigger();
-                WaypointActuator actuator = getWaypointActuator();
-                boolean result = verifyAction(trigger, actuator);
-                if (!result) {
-                    break;
-                }
-                WaypointV2Action action = new WaypointV2Action.Builder()
-                        .setTrigger(trigger)
-                        .setActuator(actuator)
-                        .setActionID(++position)
-                        .build();
-                actionAdapter.addItem(action);
-                updateSize();
-                break;
-        }
+        binding = null; // To avoid memory leaks
     }
 
     private boolean verifyAction(WaypointTrigger trigger, WaypointActuator actuator) {

@@ -1064,7 +1064,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 handler.post(() -> logMessageDJI("DJI SDK registered"));
             } else {
                 Handler handler = new Handler(Looper.getMainLooper());
-                handler.post(() -> logMessageDJI("DJI SDK registration failed"));
+//                handler.post(() -> logMessageDJI("DJI SDK registration failed"));
+                handler.post(() -> logMessageDJI(error.getDescription()));
             }
             if (error != null) {
                 Log.e(TAG, error.toString());
